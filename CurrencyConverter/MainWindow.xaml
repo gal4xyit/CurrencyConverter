@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:CurrencyConverter_Static"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
+        Icon="/Images/Icon.png"
         Title="Currency Converter" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
@@ -72,8 +73,9 @@
                 </Button.Background>
             </Button>
         </StackPanel>
-        <StackPanel Grid.Row="4">
-            <Image Height="100" Width="100" Source="/Images/Duik.png" HorizontalAlignment="Right"/>
+        <StackPanel Grid.Row="4" Orientation="Horizontal">
+            <Label Content="Сourse work by Yefimov Alexander PD-21 (DUIKT)" VerticalAlignment="Bottom" Margin="400,0,210,0"/>
+            <Image Height="100" Width="100" Source="/Images/DuiktLogo.png" HorizontalAlignment="Right"/>
         </StackPanel>
     </Grid>
 </Window>

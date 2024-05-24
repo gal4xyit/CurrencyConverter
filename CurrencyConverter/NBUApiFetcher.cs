@@ -25,7 +25,7 @@ namespace CurrencyConverter
                     string jsonResponse = await client.GetStringAsync(url);
                     List<Currency> mfetchedCurrencies = JsonConvert.DeserializeObject<List<Currency>>(jsonResponse);
 
-                    if (fetchedCurrencies != null)
+                    if (mfetchedCurrencies != null)
                     {
                         fetchedCurrencies = mfetchedCurrencies;
                         fetchedCurrencies.Add(new Currency("UAH", 1));
