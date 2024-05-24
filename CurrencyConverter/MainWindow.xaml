@@ -6,16 +6,17 @@
         xmlns:local="clr-namespace:CurrencyConverter_Static"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="Currency Converter" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
+        Title="Currency Converter" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="80"/>
+
             <RowDefinition Height="150"/>
             <RowDefinition Height="100"/>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
-        <Border Grid.Row="2" Width="800" CornerRadius="10" BorderThickness="5">
+        <Border Grid.Row="2" Width="800" CornerRadius="10" BorderThickness="5" Margin="100,0,100,0">
             <Border.BorderBrush>
                 <LinearGradientBrush EndPoint="0,0" StartPoint="1,0">
                     <GradientStop Color="#ec2075" Offset="0"/>
@@ -31,12 +32,15 @@
                 </Rectangle.Fill>
             </Rectangle>
         </Border>
-        <StackPanel Grid.Row="0" Width="1000" Height="50" Orientation="Horizontal">
-            <Label Content="Currency Converter" Width="1000" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+        <StackPanel Grid.Row="0" Width="1000" Height="50" Orientation="Horizontal" Margin="0,5,0,5">
+            <Label Content="Currency Converter" Margin="401,0,0,0" Width="200" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                    FontSize="25" Foreground="#ec2075"></Label>
+            <RadioButton Checked="radioRatesForToday_Checked" Name="radioRatesForToday" Content="Today's rate" Margin="30,0,0,0" VerticalContentAlignment="Center" FontSize="15"/>
+            <RadioButton Checked="radioRatesOnDate_Checked" Name="radioRatesOnDate" Content="Rate on date" Margin="20,0,0,0" VerticalContentAlignment="Center"  FontSize="15"/>
+            <DatePicker SelectedDateChanged="DatePicker_SelectedDateChanged" Name="DatePicker" Margin="20,0,0,0" Height="25"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" Height="80" Width="1000">
-            <Label Height="40" Width="1000" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Converted Currency" FontSize="20"></Label>
+            <Label Height="40" Width="1000" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"></Label>
             <Label Name="lblCurrency" Height="40" Width="1000" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"></Label>
         </StackPanel>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="60" Width="800">
@@ -44,14 +48,14 @@
             <Label Height="40" Width="150" Content="From:" Margin="110,0,0,0" VerticalAlignment="Bottom" Foreground="White" FontSize="20"></Label>
             <Label Height="40" Width="150" Content="To:" Margin="130,0,0,0" VerticalAlignment="Bottom" Foreground="White" FontSize="20"></Label>
         </StackPanel>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Height="90" Width="800" VerticalAlignment="Bottom">
-            <TextBox Name="txtCurrency" Width="200" Height="30" Margin="40,0,0,0" PreviewTextInput="NumberValidationTextBox" FontSize="18" VerticalContentAlignment="Center" VerticalAlignment="Top" Padding="0,2,0,0"></TextBox>
-            <ComboBox Name="cmbFromCurrency" Width="170" Height="30" Margin="60,0,40,0" FontSize="18" VerticalContentAlignment="Center" VerticalAlignment="Top" MaxDropDownHeight="150"></ComboBox>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Height="90" Width="800" VerticalAlignment="Top" Margin="0,60,0,0">
+            <TextBox Cursor="IBeam" Name="txtCurrency" Width="200" Height="30" Margin="40,0,0,0" PreviewTextInput="NumberValidationTextBox" FontSize="18" VerticalContentAlignment="Center" VerticalAlignment="Top" Padding="0,2,0,0"></TextBox>
+            <ComboBox Cursor="Hand" Name="cmbFromCurrency" Width="170" Height="30" Margin="60,0,40,0" FontSize="18" VerticalContentAlignment="Center" VerticalAlignment="Top" MaxDropDownHeight="150"></ComboBox>
             <fa:ImageAwesome Icon="Exchange" Height="30" Width="30" Foreground="White" VerticalAlignment="Top"></fa:ImageAwesome>
-            <ComboBox Name="cmbToCurrency" Width="170" Height="30" Margin="40,0,0,0" FontSize="18" VerticalContentAlignment="Center" VerticalAlignment="Top" MaxDropDownHeight="150"></ComboBox>
+            <ComboBox Cursor="Hand" Name="cmbToCurrency" Width="170" Height="30" Margin="40,0,0,0" FontSize="18" VerticalContentAlignment="Center" VerticalAlignment="Top" MaxDropDownHeight="150"></ComboBox>
         </StackPanel>
         <StackPanel Grid.Row="3" Height="100" Width="1000" Orientation="Horizontal">
-            <Button Name="Convert" Height="40" Width="150" Content="Convert" Click="Convert_Click" Margin="350,0,20,0" Foreground="White" FontSize="20" Style="{StaticResource ButtonRound}">
+            <Button Cursor="Hand" Name="Convert" Height="40" Width="150" Content="Convert" Click="Convert_Click" Margin="350,0,20,0" Foreground="White" FontSize="20" Style="{StaticResource ButtonRound}">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,0" StartPoint="1,0">
                         <GradientStop Color="#ec2075" Offset="0"/>
@@ -59,7 +63,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button Name="Clear" Height="40" Width="150" Content="Clear" Click="Clear_Click" Foreground="White" FontSize="20" Style="{StaticResource ButtonRound}">
+            <Button Cursor="Hand" Name="Clear" Height="40" Width="150" Content="Clear" Click="Clear_Click" Foreground="White" FontSize="20" Style="{StaticResource ButtonRound}">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,0" StartPoint="1,0">
                         <GradientStop Color="#ec2075" Offset="0"/>
@@ -67,6 +71,9 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
+        </StackPanel>
+        <StackPanel Grid.Row="4">
+            <Image Height="100" Width="100" Source="/Images/Duik.png" HorizontalAlignment="Right"/>
         </StackPanel>
     </Grid>
 </Window>
