@@ -18,21 +18,20 @@ using CurrencyConverter;
 
 namespace CurrencyConverter_Static
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            radioRatesForToday.IsChecked = true;
+            radioRatesForToday.IsChecked = true; // Для отримання сьогоднішнього валютного курсу за замовчуванням
         }
 
+        // Перенесення отриманого валютного курсу до комбо-боксів, коли вибраний варіант отримання курсу на сьогодні
         private async void BindTodaysCurrency()
         {
             await NBUApiFetcher.FetchCurrenciesAsync();
 
+            //Перетворення Листа з отриманими курсами до Солвника для зручності
             Dictionary<string, double> dCurrency = NBUApiFetcher.fetchedCurrencies.ToDictionary(currency => currency.currencyCode, currency => currency.rate);
 
 
@@ -47,23 +46,7 @@ namespace CurrencyConverter_Static
             cmbToCurrency.SelectedIndex = dCurrency.Count - 1;
         }
 
-        private async void BindTodayCurrency()
-        {
-            await NBUApiFetcher.FetchCurrenciesAsync();
-
-            Dictionary<string, double> dCurrency = NBUApiFetcher.fetchedCurrencies.ToDictionary(currency => currency.currencyCode, currency => currency.rate);
-           
-            cmbFromCurrency.ItemsSource = dCurrency;
-            cmbFromCurrency.DisplayMemberPath = "Key";
-            cmbFromCurrency.SelectedValuePath = "Value";
-            cmbFromCurrency.SelectedIndex = dCurrency.Count - 1;
-
-            cmbToCurrency.ItemsSource = dCurrency;
-            cmbToCurrency.DisplayMemberPath = "Key";
-            cmbToCurrency.SelectedValuePath = "Value";
-            cmbToCurrency.SelectedIndex = dCurrency.Count-1;
-        }
-
+        // Перенесення отриманого валютного курсу до комбо-боксів, коли вибраний варіант отримання курсу на вибрану дату
         private async void BindDateCurrency()
         {
             await NBUApiFetcher.FetchCurrenciesAsyncOnDate(GetDateForFetch());
@@ -80,23 +63,26 @@ namespace CurrencyConverter_Static
             cmbToCurrency.SelectedValuePath = "Value";
             cmbToCurrency.SelectedIndex = dCurrency.Count - 1;
 
+            //Відключення можливості взаємодії із інтерфейсом при не правильній даті
             if (cmbFromCurrency.Text == "WRONG DATE")
             {
-                txtCurrency.IsEnabled = false;
+                ClearControls();
+                DisableGUIFunctionality();
             }
             else
             {
-                txtCurrency.IsEnabled = true;
+                EnableGUIFunctionality();
             }
 
         }
 
 
-
+        //Логіка конвертаціїї одніїє валюти в іншу при натисканні на кнопку "Convert"
         private void Convert_Click(object sender, RoutedEventArgs e)
         {
             double ConvertedValue;
 
+            //Перевірки на те чи не порожнє поле для ведденя кількості валюти
             if (txtCurrency.Text == null || txtCurrency.Text.Trim() == "")
             {
                 MessageBox.Show("Please Enter Currency", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -105,19 +91,21 @@ namespace CurrencyConverter_Static
                 return;
             }
 
-            else if (cmbFromCurrency.SelectedValue == null || cmbFromCurrency.SelectedIndex == 0)
+            //Перевірки на те чи не порожні комбо-бокси для вибору валюти
+            else if (cmbFromCurrency.SelectedValue == null || cmbFromCurrency.SelectedIndex == NBUApiFetcher.fetchedCurrencies.Count-1)
             {
                 MessageBox.Show("Please Select Currency \"From\"", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                 cmbFromCurrency.Focus();
                 return;
             }
-            else if (cmbToCurrency.SelectedValue == null || cmbToCurrency.SelectedIndex == 0)
+            else if (cmbToCurrency.SelectedValue == null || cmbToCurrency.SelectedIndex == NBUApiFetcher.fetchedCurrencies.Count - 1)
             {
                 MessageBox.Show("Please Select Currency \"To\"", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                 cmbToCurrency.Focus();
                 return;
             }
 
+            //Процес конвератції валют, коли валют однакові або різні
             if(cmbFromCurrency.Text == cmbToCurrency.Text)
             {
                 ConvertedValue = double.Parse(txtCurrency.Text);
@@ -132,19 +120,23 @@ namespace CurrencyConverter_Static
 
         }
 
+        //Очищення полів при натисканні на кнопку "Clear"
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
             ClearControls();
         }
 
+        //Обмеженні на введеня лише цифр у полі вводу
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
+        //Зброс до стандартних значень
         private void ClearControls()
         {
+            EnableGUIFunctionality();
             txtCurrency.Text = string.Empty;
             if(cmbFromCurrency.Items.Count > 0)
                 cmbFromCurrency.SelectedIndex = 0;
@@ -154,6 +146,7 @@ namespace CurrencyConverter_Static
             txtCurrency.Focus();   
         }
 
+        //Увімкнення вибору дати(та присвоєння їй сьогоднішньої дати за замовчуванням),  коли вибраний варіант отримання курсу на вибрану дату
         private void radioRatesOnDate_Checked(object sender, RoutedEventArgs e)
         {
             DatePicker.Visibility = Visibility.Visible;
@@ -161,6 +154,7 @@ namespace CurrencyConverter_Static
             ClearControls();
         }
 
+        //Виключення вибору дати та привязка даних про сьогоднішній курс
         private void radioRatesForToday_Checked(object sender, RoutedEventArgs e)
         {
             DatePicker.Visibility = Visibility.Hidden;
@@ -168,6 +162,7 @@ namespace CurrencyConverter_Static
             BindTodaysCurrency();
         }
 
+        //Обробка дати з вибору дати(DataPicker) у правильну (для отримання данних за вибрану дату) форму.
         private string GetDateForFetch()
         {
             DateTime dataPickerDate = (DateTime)DatePicker.SelectedDate;
@@ -181,9 +176,27 @@ namespace CurrencyConverter_Static
             return noSlashCorrectedForFetchDate;
         }
 
+        //Прив'язка данних за вибрану дату після вибору ,безпосередньо, дати.
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             BindDateCurrency();
+        }
+
+        //Увімкнення та вимкнення функціональності полів.
+        private void EnableGUIFunctionality()
+        {
+            txtCurrency.IsEnabled = true;
+            Convert.IsEnabled = true;
+            Clear.IsEnabled = true;
+            cmbToCurrency.IsEnabled = true;
+        }
+
+        private void DisableGUIFunctionality()
+        {
+            txtCurrency.IsEnabled = false;
+            Convert.IsEnabled = false;
+            Clear.IsEnabled = false;
+            cmbToCurrency.IsEnabled = false;
         }
     }
 }

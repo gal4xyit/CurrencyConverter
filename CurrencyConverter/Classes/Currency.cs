@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//Клас який описує валюти
 namespace CurrencyConverter
 {
     internal class Currency
     {
-        [JsonProperty("rate")]
+        [JsonProperty("rate")] //Інструкція для Json, щоб сереалізував отриману дату з даним полем
         public double rate;
         [JsonProperty("cc")]
         public string currencyCode;
