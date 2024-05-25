@@ -34,7 +34,9 @@ namespace CurrencyConverter_Static
             //Перетворення Листа з отриманими курсами до Солвника для зручності
             Dictionary<string, double> dCurrency = NBUApiFetcher.fetchedCurrencies.ToDictionary(currency => currency.currencyCode, currency => currency.rate);
 
-
+            //Коли відкритий комбо-бокс, до речі, можна просто натиснути першу літеру валюти яку хочеш знайти і воно виділить її.
+            //(відповідно розкладка клавіатури повинна бути англійська)
+            //(повторний клік преность на наступну валюту з такою ж літерою)
             cmbFromCurrency.ItemsSource = dCurrency;
             cmbFromCurrency.DisplayMemberPath = "Key";
             cmbFromCurrency.SelectedValuePath = "Value";
@@ -189,6 +191,7 @@ namespace CurrencyConverter_Static
             Convert.IsEnabled = true;
             Clear.IsEnabled = true;
             cmbToCurrency.IsEnabled = true;
+            cmbFromCurrency.IsEnabled = true;
         }
 
         private void DisableGUIFunctionality()
@@ -197,6 +200,7 @@ namespace CurrencyConverter_Static
             Convert.IsEnabled = false;
             Clear.IsEnabled = false;
             cmbToCurrency.IsEnabled = false;
+            cmbFromCurrency.IsEnabled = false;
         }
     }
 }
